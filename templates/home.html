@@ -1,12 +1,18 @@
+{% extends 'base.html' %}
 
-  {% if  request.user.is_authenticated %}
-  <li><a href="{% url 'logout' %}">Logout</a></li>
-  {% else %} 
-  <li><a href="{% url 'register' %}" > Register </a></li>
-  <li><a href="{% url 'loginr' %}"> Login </a></li>
-  {% endif %}
-  
-hello world
+{% block title %}DASHBOARD{% endblock title %}
+
+{% if  request.user.is_authenticated %}
+<li><a href="{% url 'logout' %}">Logout</a></li>
+{% else %} 
+<li><a href="{% url 'register' %}" > Register </a></li>
+<li><a href="{% url 'loginr' %}"> Login </a></li>
+{% endif %}
+
+{% block body %}
+
+<div class="main">
+    hello world
 
 
 {{ssu}}
@@ -65,5 +71,10 @@ hello world
             </div>
 
             <br>
+</div>
+
+
+
+{% endblock body %}
 
         

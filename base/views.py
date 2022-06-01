@@ -85,4 +85,32 @@ def logoutUser(request):
     logout(request)
     return redirect('home')
 
+def events(request):
+    if request.user.is_authenticated:   
+        return render(request, 'events.html')
+    else:
+        return redirect('loginr')
 
+def notices(request):
+    if request.user.is_authenticated:
+        return render(request, 'notices.html')
+    else:
+        return redirect('loginr')
+
+def notes(request):
+    if request.user.is_authenticated:
+        return render(request, 'notes.html')
+    else:
+        return redirect('loginr')
+
+def qps(request):
+    if request.user.is_authenticated:
+        return render(request, 'qps.html')
+    else:
+        return redirect('loginr')
+
+def opd(request):
+    if request.user.is_authenticated:
+        return render(request, 'opd.html')
+    else:
+        return redirect('loginr')
