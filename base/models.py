@@ -7,10 +7,15 @@ from .manager import UserManager
 # Create your models here.
 class User(AbstractUser):
     username=None
-    first_name=models.CharField(null=True, max_length=11, default="x")
-    last_name=models.CharField(null=True, max_length=11, default="x")
+    first_name=models.CharField(null=True, max_length=11)
+    last_name=models.CharField(null=True, max_length=11)
     email=models.EmailField(unique=True, null=False)
     phone_no=models.CharField(max_length=11, null=True)
+    STAFF_CHOICES = (
+        ('Y','Yes'),
+        ('N', 'No')
+    )
+    staff=models.CharField(max_length=3, choices=STAFF_CHOICES ,null=True)
     created_at=models.DateTimeField(auto_now_add=True)
     USERNAME_FIELD = 'email'
     objects=UserManager()
@@ -58,24 +63,22 @@ class College(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.RESTRICT)
-    college = models.ForeignKey(College,  on_delete=models.RESTRICT)
-    program = models.ForeignKey(Program,  on_delete=models.RESTRICT)
-    department = models.ForeignKey(Department,  on_delete=models.RESTRICT)
-    year = models.ForeignKey(Year,  on_delete=models.RESTRICT)
-
-    def __str__(self) :
-        return self.user
+    college = models.ForeignKey(College,  on_delete=models.RESTRICT, null=True)
+    program = models.ForeignKey(Program,  on_delete=models.RESTRICT, null=True)
+    department = models.ForeignKey(Department,  on_delete=models.RESTRICT, null=True)
+    year = models.ForeignKey(Year,  on_delete=models.RESTRICT, null=True)
+    gender = models.CharField(max_length=8, null=True)
+    detail_filled = models.BooleanField(default=False)
 
 class Staffadmin(models.Model):
     user = models.OneToOneField(User, on_delete=models.RESTRICT)
-    college = models.ForeignKey(College,  on_delete=models.RESTRICT)
-    program = models.ForeignKey(Program,  on_delete=models.RESTRICT)
-    department = models.ForeignKey(Department,  on_delete=models.RESTRICT)
-    year = models.ForeignKey(Year,  on_delete=models.RESTRICT)
-    club = models.ForeignKey(Club,  on_delete=models.RESTRICT)
-
-    def __str__(self) :
-        return self.user
+    college = models.ForeignKey(College,  on_delete=models.RESTRICT, null=True)
+    program = models.ForeignKey(Program,  on_delete=models.RESTRICT, null=True, blank=True)
+    department = models.ForeignKey(Department,  on_delete=models.RESTRICT, null=True)
+    year = models.ForeignKey(Year,  on_delete=models.RESTRICT, null=True, blank=True)
+    club = models.ForeignKey(Club,  on_delete=models.RESTRICT, null=True)
+    gender = models.CharField(max_length=8, null=True)
+    detail_filled_s = models.BooleanField(default=False)
 
 class Events(models.Model):
     event = models.CharField(max_length=110)
@@ -84,6 +87,7 @@ class Events(models.Model):
     tg_audience = models.CharField(max_length=225)
     event_desc = models.CharField(max_length=700)
     venue = models.CharField(max_length=200)
+    status = models.BooleanField(default=True)
     
     def __str__(self) :
         return self.event
