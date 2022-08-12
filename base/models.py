@@ -1,3 +1,5 @@
+import os
+import datetime
 from tkinter import CASCADE
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -11,11 +13,11 @@ class User(AbstractUser):
     last_name=models.CharField(null=True, max_length=11)
     email=models.EmailField(unique=True, null=False)
     phone_no=models.CharField(max_length=11, null=True)
-    STAFF_CHOICES = (
-        ('Y','Yes'),
-        ('N', 'No')
+    ROLE_CHOICES = (
+        ('1','Student'),
+        ('2', 'Staff')
     )
-    staff=models.CharField(max_length=3, choices=STAFF_CHOICES ,null=True)
+    role=models.CharField(max_length=10, choices=ROLE_CHOICES ,null=True)
     created_at=models.DateTimeField(auto_now_add=True)
     USERNAME_FIELD = 'email'
     objects=UserManager()
@@ -80,13 +82,20 @@ class Staffadmin(models.Model):
     gender = models.CharField(max_length=8, null=True)
     detail_filled_s = models.BooleanField(default=False)
 
+def upload_path(instance, filename):
+    return os.path.join('event_photos/' + datetime.datetime.now().strftime('%Y/%m/%d/') + instance.event, filename)
+
 class Events(models.Model):
     event = models.CharField(max_length=110)
-    college = models.ForeignKey(College,  on_delete=models.RESTRICT)
+    college = models.ForeignKey(College,  on_delete=models.RESTRICT, null=True)
     date_time = models.DateTimeField()
     tg_audience = models.CharField(max_length=225)
     event_desc = models.CharField(max_length=700)
     venue = models.CharField(max_length=200)
+    event_img1 = models.ImageField(upload_to=upload_path, height_field=None, width_field=None, blank=True, default=True)
+    event_img2 = models.ImageField(upload_to=upload_path, height_field=None, width_field=None, blank=True, default=True)
+    event_img3 = models.ImageField(upload_to=upload_path, height_field=None, width_field=None, blank=True, default=True)
+    event_img4 = models.ImageField(upload_to=upload_path, height_field=None, width_field=None, blank=True, default=True)
     status = models.BooleanField(default=True)
     
     def __str__(self) :
@@ -99,25 +108,43 @@ class Event_reg(models.Model):
     def __str__(self) :
         return self.eventuser
 
+def upload_path_notice_files(instance, filename):
+    return os.path.join('notice_files/' + datetime.datetime.now().strftime('%Y/%m/%d/') + instance.notice_title, filename)
+
 class Notice(models.Model):
     notice_title = models.CharField(max_length=225)
     notice_date = models.DateTimeField()
-    notice_desc = models.CharField(max_length=225)
+    notice_desc = models.CharField(max_length=5000)
     notice_college = models.ForeignKey(College, on_delete=models.RESTRICT)
     notice_dept = models.ForeignKey(Department, on_delete=models.RESTRICT)
     notice_year = models.ForeignKey(Year, on_delete=models.RESTRICT)
+    notice_file = models.FileField(upload_to=upload_path_notice_files, blank=True)
 
     def __str__(self) :
         return self.notice_title
 
+class Subject(models.Model):
+    subject =models.CharField(max_length=110)
+
+    def __str__(self):
+        return self.subject
+
+def upload_path_notes_files(instance, filename):
+    return os.path.join('notes_files/' + datetime.datetime.now().strftime('%Y/%m/%d/') + instance.notes_subject.subject + instance.notes_unit, filename)
+
 class Notes(models.Model):
-    notes_subject = models.CharField(max_length=265)
+    notes_subject = models.ForeignKey(Subject, on_delete=models.RESTRICT)
+    notes_unit_no = models.IntegerField(default=True)
+    notes_unit = models.CharField(max_length=260)
     notes_college = models.ForeignKey(College, on_delete=models.RESTRICT)
     notes_dept = models.ForeignKey(Department, on_delete=models.RESTRICT)
     notes_year = models.ForeignKey(Year, on_delete=models.RESTRICT)
+    notes_file = models.FileField(upload_to=upload_path_notes_files, blank=True)
+    # Subject Books and Course Book Pdf model also need 
+    # to be created!
 
     def __str__(self) :
-        return self.notes_subject
+        return str(self.notes_subject)
 
 class Qpaper(models.Model):
     qpaper_subject = models.CharField(max_length=265)

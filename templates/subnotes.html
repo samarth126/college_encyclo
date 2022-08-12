@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}SUBNOTES{% endblock title %}
+{% block style %}
+<style>
+    div#ntsb{
+        /* text-align: center; */
+        margin: 40px 100px;
+        background-color: rgba(127, 177, 116, 0.787);
+        border: 1px solid gray;
+        border-radius: 5px;
+        box-shadow: 5px 5px 10px  lightgray;
+    }
+    div#inner{
+        margin: 2px 0px;
+        padding: 5px 40px;
+        font-size: 20px;
+        color: black;
+    }
+</style>
+{% endblock style %}
+{% block body %}
+<div class="container mb-3 py-4">
+    <h2 class="text-center my-4">------------------ NOTES ------------------</h2>
+    <div class="mb-3" id="ntsb">
+        {% for x in nt %}
+        <div id="inner" >Unit {{x.notes_unit_no}} : {{x.notes_unit}}
+        <a id="ntsb" href="{{x.notes_file.url}}">  View and Download Here</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock body %}

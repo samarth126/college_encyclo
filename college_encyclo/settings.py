@@ -10,7 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+import os
 from pathlib import Path
+from pickle import APPEND
+from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -64,12 +67,26 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
+                'django.template.context_processors.media',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
         },
     },
 ]
+
+# Added Manually
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+# Added Manually
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
+
+# # Added Manually
+# FILE_UPLOAD_MAX_MEMORY_SIZE = 350000000000
 
 WSGI_APPLICATION = 'college_encyclo.wsgi.application'
 
@@ -113,6 +130,8 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
+USE_L10N = True
+
 USE_TZ = True
 
 
@@ -123,7 +142,8 @@ STATIC_URL = 'static/'
 
 # adding manually
 STATICFILES_DIRS = [
-    BASE_DIR / 'static'
+    BASE_DIR / "static",
+    '/var/www/static/',
 ]
 
 # Default primary key field type

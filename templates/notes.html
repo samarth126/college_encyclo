@@ -1,6 +1,132 @@
 {% extends 'base.html' %}
-
 {% block title %}NOTES{% endblock title %}
+{% block style %}
+<script type="text/javascript" src="/static/notes/modal1.js"></script>
+<script type="text/javascript" src="/static/notes/modal2.js"></script>
+<script type="text/javascript" src="/static/notes/modal3.js"></script>
+<script type="text/javascript" src="/static/notes/modal4.js"></script>
+<script type="text/javascript" src="/static/notes/modal5.js"></script>
+<script type="text/javascript" src="/static/notes/modal6.js"></script>
+<script type="text/javascript">{}</script>
+{% endblock style %}
+
 {% block body %}
-<h1 class="main">This is Our Notes Page</h1>
+<div class="container mb-3 py-4" >
+{% if staf == '2' %}
+  <h2 class="text-center my-4">-------- Upload New Notes Here --------</h2>
+  <br>  
+  <!-- Form for notices starts -->
+
+  <!-- Modal to Add Subject Starts -->
+  <form action="{% url 'notes' %}" method="post" >
+    {% csrf_token %}
+  <div class="modal fade" id="modalSubscriptionForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header text-center">
+          <h4 class="modal-title w-100 font-weight-bold">Add Subject</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body mx-3">
+          <div class="md-form mb-4">
+            <i class="fas fa-envelope prefix grey-text"></i>
+            <label data-error="wrong" data-success="right" for="form2">Type Full Subject Name</label>
+            <input type="text" id="form2" name="nsb" class="form-control">
+          </div>
+
+        </div>
+        <div class="modal-footer d-flex justify-content-center">
+          <button type="submit" name="modal_form" class="btn btn-secondary"> Add <i class="fas fa-paper-plane-o ml-1"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+  <div class="text-left">
+      <a href="#" class="btn btn-outline-secondary mb-4" data-toggle="modal" data-target="#modalSubscriptionForm">Click Here To Add Subject</a>
+      <p>(only if not in the list below)</p>
+  </div>
+  <br>
+<!-- Modal to Add Subject Ends -->
+  
+  <form method="POST" action="{% url 'notes' %}">
+    {% csrf_token %} 
+
+    <div class="mb-3">
+        <label for="nt_sb" class="form-label">Select Subject</label>
+        <select class="form-select" name="nt_sb" aria-label="Default select example">
+            <option selected>Select Subject</option>
+            {% for o in oi %}
+            <option value="{{ o.id }}">{{ o.subject }}</option>
+        {% endfor %}
+          </select>
+    </div>
+
+      <div class="mb-3">
+          <label for="note_unit_no" class="form-label">Unit Number</label>
+          <input type="text" class="form-control" id="note_unit_no" name="note_unit_no" placeholder="Enter Unit No.">
+      </div>
+      
+      <div class="mb-3">
+          <label for="note_unit" class="form-label">Unit Name</label>
+          <input type="text" class="form-control" id="note_unit" name="note_unit" placeholder="Enter Unit Name">
+      </div>
+
+      <div class="mb-3">
+        <label for="college" class="form-label">Select College</label>
+        <select class="form-select" name="college" aria-label="Default select example">
+          <option selected>Select College</option>
+          {% for cl in c %}
+          <option value="{{ cl.id }}">{{ cl.college }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label for="department" class="form-label">Select Department</label>
+        <select class="form-select" name="department" aria-label="Default select example">
+          <option selected>Select Department</option>
+          {% for dl in d %}
+          <option value="{{ dl.id }}">{{ dl.department }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label for="year" class="form-label">Select Year</label>
+        <select class="form-select" name="year" aria-label="Default select example">
+          <option selected>Select Year</option>
+          {% for yl in y %}
+          <option value="{{ yl.id }}">{{ yl.year }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="mx-2">
+        <label for="note_file">Upload the orginal file below to be posted : </label>
+        <input type="file" name="note_file" class="btnRegister"  value="Upload Notes"/>
+        <input type="submit" class="btnRegister" name="note_form"  value="Upload"/>
+      </div>
+
+  </form>
+  <!-- Form for notices ends -->  
+  <br>
+  <hr>
+  {% endif %}
+  <br>
+  <div class="mb-3 py-4">
+        <h3 class="text-center">Get All Subject Notes Here Completely Free</h3>
+        <br>
+      <ul style="list-style-type:circle">
+        {% for d in oi %}
+        <li><a href="{% url 'subnotes' pk=d.id %}">{{ d.subject }}</a></li>
+        {% endfor %}
+    </ul>
+  </div>
+</div>
+
 {% endblock body %}

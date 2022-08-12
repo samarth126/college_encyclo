@@ -2,17 +2,173 @@
 
 {% block title %}EVENTS{% endblock title %}
 
+{% block style %}
+<style>
+  div#upeve{
+    padding: 10px 50px;
+    margin: 10px 100px;
+    box-shadow: 5px 5px 10px lightgray;
+  }
+  div#preve{
+    box-shadow: 5px 5px 10px lightgray;
+    margin: 10px 100px;
+  }
+</style>
+{% endblock style %}
+
 {% block body %}
+{% if staf == '2' %}
+<div class="container mb-3 py-4" >
+  <h2 class="text-center my-4">-------- Upload New Events Here --------</h2>
+  <br>  
+  <!-- Form to choose clg starts -->
+  <form method="POST" action="{% url 'events' %}">
+    {% csrf_token %}
+    <div class="mb-3" style="margin: 0px 100px;">
+      <select class="form-select" name="clg_type" aria-label="Default select example">
+        <option selected>Select the college for which event need to be uploaded.</option>
+        <option value="self">My Own College</option>
+        <option value="other">Other Colleges</option>
+      </select>
+      <br>
+        <input type="submit" class="btnRegister"  value="Select" style="width: 100px;"/>
+    </div>
+  </form>
+  <!-- Form to choose clg ends -->
+  <br>
 
+  {% if clg_type == "self" %}
+  <!-- Form for own college starts -->
+  <form method="POST" enctype="multipart/form-data" action="{% url 'events_self' %}">
+    {% csrf_token %} 
 
+      <div class="mb-3">
+          <label for="event" class="form-label">Event Name</label>
+          <input type="text" class="form-control" id="event_s" name="event_s" placeholder="Upcoming Event Name">
+      </div>
+
+      <div class="mb-3">
+          <label for="date_time" class="form-label">Date & Time</label>
+          <input type="datetime-local" class="form-control" id="date_time_s" name="date_time_s" placeholder="Select Date and Time">
+      </div>
+      
+      <div class="mb-3">
+          <label for="tg_audience" class="form-label">Target Audience</label>
+          <input type="text" class="form-control" id="tg_audience_s" name="tg_audience_s" placeholder="Describe Target Audience">
+      </div>
+      
+      <div class="mb-3">
+          <label for="event_desc" class="form-label">Event Description</label>
+          <textarea type="text" class="form-control" id="event_desc_s" name="event_desc_s" placeholder="Describe About the Event" rows="3"></textarea>
+      </div>
+      
+      <div class="mb-3">
+          <label for="venue" class="form-label">Venue</label>
+          <input type="text" class="form-control" id="venue_s" name="venue_s" placeholder="Address of the Event Venue">
+      </div>
+      
+      <div class="mb-3">
+        <label for="img1">Upload Your First Image (compulsory) :</label>
+        <input type="file" name="img1_s"  value="Upload First Image"/>
+        <br>
+        <label for="img2">Upload Your Second Image (optional):</label>
+        <input type="file" name="img2_s"  value="Upload Second Image"/>
+        <br>
+        <label for="img3">Upload Your Third Image (optional) : </label>
+        <input type="file" name="img3_s"  value="Upload Third Image"/>
+        <br>
+        <label for="img4">Upload Your Fourth Image (optional) : </label>
+        <input type="file" name="img4_s"  value="Upload Fourth Image"/>
+      </div>
+
+      <div class="mx-2">
+          <!-- <button type="button" class="btn btn-outline-success">Upload Upcoming Events</button> -->
+          <input type="submit" class="btnRegister"  value="Upload Upcoming Events"/>
+      </div>
+
+  </form>
+  <!-- Form for own college ends -->
+  {% endif %}
+  
+  {% if clg_type == 'other' %}
+  <!-- Form for other college starts -->
+  <form method="POST" enctype="multipart/form-data" action="{% url 'events_other' %}">
+    {% csrf_token %} 
+    
+    <div class="mb-3">
+        <label for="event" class="form-label">Event Name</label>
+        <input type="text" class="form-control" id="event" name="event" placeholder="Upcoming Event Name">
+    </div>
+    
+    <div class="mb-3">
+      <label for="college" class="form-label">Select Your College</label>
+      <select class="form-select" name="college" aria-label="Default select example">
+        <option selected>Select Your College</option>
+        {% for cl in c %}
+        <option value="{{ cl.id }}">{{ cl.college }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="date_time" class="form-label">Date & Time</label>
+        <input type="datetime-local" class="form-control" id="date_time" name="date_time" placeholder="Select Date and Time">
+    </div>
+    
+    <div class="mb-3">
+        <label for="tg_audience" class="form-label">Target Audience</label>
+        <input type="text" class="form-control" id="tg_audience" name="tg_audience" placeholder="Describe Target Audience">
+    </div>
+    
+    <div class="mb-3">
+        <label for="event_desc" class="form-label">Event Description</label>
+        <textarea type="text" class="form-control" id="event_desc" name="event_desc" placeholder="Describe About the Event" rows="3"></textarea>
+    </div>
+    
+    <div class="mb-3">
+        <label for="venue" class="form-label">Venue</label>
+        <input type="text" class="form-control" id="venue" name="venue" placeholder="Address of the Event Venue">
+    </div>
+    
+    <div class="mb-3">
+      <label for="img1">Upload Your First Image (compulsory) :</label>
+      <input type="file" name="img1"  value="Upload First Image"/>
+      <br>
+      <label for="img2">Upload Your Second Image (optional):</label>
+      <input type="file" name="img2"  value="Upload Second Image"/>
+      <br>
+      <label for="img3">Upload Your Third Image (optional) : </label>
+      <input type="file" name="img3"  value="Upload Third Image"/>
+      <br>
+      <label for="img4">Upload Your Fourth Image (optional) : </label>
+      <input type="file" name="img4"  value="Upload Fourth Image"/>
+    </div>
+
+    <div class="mx-2">
+        <!-- <button type="button" class="btn btn-outline-success">Upload Upcoming Events</button> -->
+        <input type="submit" class="btnRegister"  value="Upload Upcoming Events"/>
+    </div>
+
+  </form>
+  <!-- Form for other college ends -->
+  {% endif %}
+</div>
+{% endif %}
+
+<!-- <div class="design">It’s a well-known fact that events are the best way to establish personal connections with not only your target audience but also your potential partners, sponsors, etc. Events are an effective way for businesses to build trust, form an emotional connection, and finally have a chance to stand out from its numerous competitors.</div>
+<br>
+<div class="design">Events are important because they allow for a more intimate and engaging experience with your audience which ultimately leaves a lasting impression and one that is more memorable than a passive viewing of a more traditional form of advertising. Events come in all shapes and sizes but the ability to interact one-on-one with a brand, environment, product etc. is unique to events and the reason I feel they are such an important medium of advertising and the future of brand marketing.</div> -->
+
+<!-- Upcoming Events Starts -->
+<h2 class="text-center my-4">------------------------------ Upcoming Events ------------------------------</h2>
+<br>
+<br>
 {% for ev_u in eve_u %}
-<br>
-<h2 class="main" style="width:fit-content ; margin:0 auto;">Upcoming Events</h2>
-<br>
-<div class="card mx-auto " style="max-width:auto; ">
+<div id="upeve" class="card" style="max-width:auto; padding-left:100px; padding-right:100px;  ">
     <div class="row g-0 ">
       <div class="col-md-4 ">
-        <img src="..." class="img-fluid rounded-start" alt="...">
+        <br>
+        <img src="{{ ev_u.event_img1.url }}" height="500px" width="800px" class="img-fluid rounded-start" alt="...">
       </div>
       <div class="col-md-8">
         <div class="card-body">
@@ -32,31 +188,22 @@
       </div>
     </div>
   </div>
-  {% endfor %}
-
-<br>
-<br>
-<br>
-
-
-
-
-
-
-
-
-
-
-  <h2 class="main" style="width:fit-content ; margin:0 auto;">Previous Events</h2>
   <br>
-  
+{% endfor %}
+<!-- Upcoming Events End -->
+<br>
+<br>
+<br>
+<!-- Previous Events Starts -->
+<h2 class="text-center my-4">------------------------------ Previous Events ------------------------------</h2>
+<br>
 {% for ev_p in eve_p %}
-<div class="row">
+<div  id="preve" class="card col-6">
   <div class="row">
-    <div class="col-6">
+    <div class="card">
 
       <div class="card">
-        <img src="..." class="card-img-top" alt="...">
+        <img src="{{ ev_p.event_img1.url }}" height="300px" width="500px" class="card-img-top" alt="...">
         <div class="card-body">
           <h5 class="card-title">{{ev_p.event}}</h5>
           <p class="card-text">{{ev_p.event_desc}}</p>
@@ -72,7 +219,8 @@
     </div>
   </div>
 </div>
-    {% endfor %}
-  
-  {% endblock body %}
+{% endfor %}
+<!-- Previous Events End -->
+{% endblock body %}
+
   
